@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .student-info {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .student-info p {
+            margin: 5px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 100px);
+        }
+
+        .block {
+            width: 200px;
+            height: 200px;
+            background-color: #3498db;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 20px;
+        }
+
+        .block:hover {
+            transform: scale(1.1);
+        }
+
+        .block h2 {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .marks {
+            background-color: #e74c3c;
+        }
+
+        .attendance {
+            background-color: #2ecc71;
+        }
+
+        .materials {
+            background-color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Student Dashboard</h1>
+        <div class="student-info">
+           
+        </div>
+    </div>
+    <div class="container">
+        <div class="block marks" onclick="window.location.href='/Student'">
+            <h2>Marks</h2>
+        </div>
+        <div class="block attendance" onclick="window.location.href='attendance.html'">
+            <h2>Attendance</h2>
+        </div>
+        <div class="block materials" onclick="window.location.href='/material-stud'">
+            <h2>Materials</h2>
+        </div>
+    </div>
+</body>
+</html>

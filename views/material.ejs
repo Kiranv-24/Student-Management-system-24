@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        header {
+            background-color: #283593;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .logout-button {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .logout-button:hover {
+            background-color: #d32f2f;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        
+        .option-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: calc(50% - 40px); /* Adjust width to fit within the container */
+            transition: transform 0.3s ease;
+        }
+        
+        .option-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .option-box h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #283593;
+        }
+        
+        .custom-file-upload {
+            border: none;
+            background-color: #283593;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+        
+        .custom-file-upload:hover {
+            background-color: #1a237e;
+        }
+        
+        .file-info-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(100% - 40px); /* Adjust width to fit within the container */
+            margin: 0 auto; /* Center the file info box */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-info-box h2 {
+            font-size: 20px;
+            color: #283593;
+            margin-bottom: 10px;
+        }
+        
+        .file-info-box ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .file-info-box li {
+            margin-bottom: 5px;
+        }
+        
+        .file-info-box a {
+            color: #000;
+            text-decoration: none;
+        }
+        
+        .file-info-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>RVCE Classroom</h1>
+        <button class="logout-button" onclick="login()">Logout</button>
+
+    </header>
+    
+    <div class="button-container">
+        <div class="option-box">
+            <h3>Create Announcement</h3>
+            <textarea id="announcement-text" rows="4" cols="30" placeholder="Enter your announcement here"></textarea>
+            <button class="btn btn-primary" onclick="postAnnouncement()">Post</button>
+        </div>
+
+        <div class="option-box">
+            <h3>Upload Notes/Material</h3>
+            
+            <label for="file-upload" class="custom-file-upload">
+                Choose File
+            </label>
+               <textarea id="class-name" rows="1" cols="30" placeholder="Enter class name"></textarea> 
+
+            <input id="file-upload" type="file" onchange="displayFileInfo()" style="display: none;" />
+            <button class="btn btn-primary" id="upload-button" onclick="upload()" style="display: none;">Upload</button>
+        </div>
+    </div>
+
+    <div class="file-info-box" id="file-info-box">
+        <h2>Uploaded Files</h2>
+        <ul id="uploaded-files"></ul>
+    </div>
+ 
+
+
+    <script>
+        // Function to display uploaded files
+        function displayUploadedFiles() {
+            const uploadedFiles = localStorage.getItem('uploadedFiles');
+            if (uploadedFiles) {
+                const files = JSON.parse(uploadedFiles);
+                const fileList = document.getElementById('uploaded-files');
+                fileList.innerHTML = '';
+                files.forEach(file => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = file.link;
+                    link.textContent = file.name;
+                    listItem.appendChild(link);
+                    fileList.appendChild(listItem);
+                });
+            }
+        }
+
+        // Function to save uploaded file information in local storage
+        function saveUploadedFile(name, link) {
+            let uploadedFiles = localStorage.getItem('uploadedFiles');
+            if (!uploadedFiles) {
+                uploadedFiles = [];
+            } else {
+                uploadedFiles = JSON.parse(uploadedFiles);
+            }
+            uploadedFiles.push({ name, link });
+            localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+        }
+
+        // Function to display file information
+        function displayFileInfo() {
+            const fileInput = document.getElementById('file-upload');
+            const fileName = fileInput.files[0].name;
+            const fileInfoBox = document.getElementById('file-info-box');
+            const uploadButton = document.getElementById('upload-button');
+            const fileLink = URL.createObjectURL(fileInput.files[0]);
+            const fileList = document.getElementById('uploaded-files');
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = fileLink;
+            link.textContent = fileName;
+            listItem.appendChild(link);
+            fileList.appendChild(listItem);
+            saveUploadedFile(fileName, fileLink);
+            fileInfoBox.style.display = 'block';
+            uploadButton.style.display = 'block';
+        }
+       let selectedFileLink = null;
+
+  function upload() {
+    const fileInput = document.getElementById('file-upload');
+    const classname = document.getElementById('class-name').value;
+     console.log("aaaa",classname)
+    const file = fileInput.files[0];
+    const link= URL.createObjectURL(fileInput.files[0]);
+    if (file) {
+        console.log('File selected:', file.name);
+
+        const formData = new FormData();
+        formData.append('file', file); // Pass the file object, not the file link
+        formData.append('file', link);
+         formData.append('classname', classname); 
+         console.log("aaaa",classname)
+          
+        console.log('File selected:', link);
+        console.log("1st link", file); // Log the file object to ensure it's correct
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        }) 
+        .then(response => {
+            if (response.ok) {
+                console.log('File uploaded successfully');
+                if (file) {
+                    // Connect the link to the uploaded file
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(file); // Use object URL for the link
+                    link.textContent = file.name;
+                    link.target = '_blank'; // Open in a new tab
+                    listItem.appendChild(link);
+                    const fileIconBox = document.createElement('div');
+                    fileIconBox.className = 'file-icon-box';
+                    const fileIcon = document.createElement('div');
+                    fileIcon.className = 'file-icon';
+                    fileIconBox.appendChild(fileIcon);
+                    listItem.insertBefore(fileIconBox, listItem.firstChild);
+                    document.getElementById('uploaded-files').appendChild(listItem);
+                }
+            } else {
+                console.error('Failed to upload file');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    } else {
+        console.log('No file selected.');
+    }
+}
+
+    function displayFileName() {
+        const fileInput = document.getElementById('file-upload');
+        const fileNameWithPath = fileInput.value; // Get the full path
+        const fileName = fileNameWithPath.split(/\\|\//).pop(); // Extract only the file name
+        selectedFileLink = URL.createObjectURL(fileInput.files[0]); // Get the link of the selected file
+        console.log("link",selectedFileLink);
+        // Update the display (optional)
+        const label = document.querySelector('.custom-file-upload');
+        label.textContent = fileName; // Display the file name in the label (optional)
+    }
+      function postAnnouncement() {
+        const message = document.getElementById('announcement-text').value;
+
+        fetch('/announcement', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Announcement posted successfully');
+                // Clear the textarea after posting announcement
+                document.getElementById('announcement-text').value = '';
+            } else {
+                console.error('Failed to post announcement');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
+
+    <!-- Bootstrap script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+
+
+</html>

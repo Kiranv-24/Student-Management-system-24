@@ -365,9 +365,9 @@ const Datad = mongoose.model("Datad", new mongoose.Schema({
     branch: String,
 }, { collection: "detail" }));
 
-mongoose.connect("mongodb+srv://kiranv:kiranvkitta@student.t8dgger.mongodb.net/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+mongoose.connect("mongodb+srv://kiranv24042004:kiran@cluster0.ilemc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
 }).then(() => {
     console.log("Database connected");
 }).catch(err => {
